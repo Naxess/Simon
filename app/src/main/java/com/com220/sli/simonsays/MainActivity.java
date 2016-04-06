@@ -10,9 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
@@ -24,7 +28,7 @@ public class MainActivity extends AppCompatActivity
     Button start;
     TextView score;
     Boolean swap = false;
-    Random rand = new Random(3);
+    ArrayList<Integer> sequence = new ArrayList<Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -50,23 +54,125 @@ public class MainActivity extends AppCompatActivity
         bottomLeft = (Button)findViewById(R.id.bottomleft_button);
         start = (Button)findViewById(R.id.start);
 
+        final Animation blink = new AlphaAnimation(1,0);
+        blink.setDuration(1000);
+        blink.setInterpolator(new LinearInterpolator());
+        //blink.setRepeatCount(Animation.ABSOLUTE); //or INFINITE
+        ///blink.setRepeatMode(Animation.REVERSE);
+        start.startAnimation(blink);
 
-        Integer [] intArray = new Integer[4];
-        for(int i = 0; i < 4; i++)
+        start.setOnClickListener(new View.OnClickListener()
         {
-            Random ran = new Random();
-            int randomNumber = ran.nextInt(100);
-            intArray[i] = randomNumber;
+            @Override
+            public void onClick(View v)
+            {
+                start.clearAnimation();
+                for(int i = 0; i < 60; i++)
+                {
+                    Random random = new Random();
+                    int temp = random.nextInt(4);
+                    sequence.add(temp);
+                    //start.setText(temp + "");
+                }
+                new CountDownTimer(10000, 1000)
+                {
+                    int counter = 0;
+                    public void onTick(long mill)
+                    {
+                        int temp = 0;
+                        temp = sequence.get(counter);
+                        start.setText(temp + ""); //Driver code
+                        counter++;
+                        if(temp == 0)
+                        {
+                            topRight.clearAnimation();
+                            bottomLeft.clearAnimation();
+                            bottomRight.clearAnimation();
+                            topLeft.startAnimation(blink);
 
-        }
+                            topLeft.setBackgroundColor(Color.GRAY);
+                            topRight.setBackgroundColor(Color.GREEN);
+                            bottomLeft.setBackgroundColor(Color.BLUE);
+                            bottomRight.setBackgroundColor(Color.YELLOW);
+                            topLeft.setTextColor(Color.GREEN);
+                            topRight.setTextColor(Color.WHITE);
+                            bottomLeft.setTextColor(Color.WHITE);
+                            bottomRight.setTextColor(Color.WHITE);
+                        }
+                        else if(temp == 1)
+                        {
+                            topLeft.clearAnimation();
+                            bottomLeft.clearAnimation();
+                            bottomRight.clearAnimation();
+                            topRight.startAnimation(blink);
 
-        int counter;
+                            topLeft.setBackgroundColor(Color.RED);
+                            topRight.setBackgroundColor(Color.GRAY);
+                            bottomLeft.setBackgroundColor(Color.BLUE);
+                            bottomRight.setBackgroundColor(Color.YELLOW);
+                            topLeft.setTextColor(Color.WHITE);
+                            topRight.setTextColor(Color.GREEN);
+                            bottomLeft.setTextColor(Color.WHITE);
+                            bottomRight.setTextColor(Color.WHITE);
+                        }
+                        else if(temp == 2)
+                        {
+                            topLeft.clearAnimation();
+                            topRight.clearAnimation();
+                            bottomRight.clearAnimation();
+                            bottomLeft.startAnimation(blink);
+
+                            topLeft.setBackgroundColor(Color.RED);
+                            topRight.setBackgroundColor(Color.GREEN);
+                            bottomLeft.setBackgroundColor(Color.GRAY);
+                            bottomRight.setBackgroundColor(Color.YELLOW);
+                            topLeft.setTextColor(Color.WHITE);
+                            topRight.setTextColor(Color.WHITE);
+                            bottomLeft.setTextColor(Color.GREEN);
+                            bottomRight.setTextColor(Color.WHITE);
+                        }
+                        else if(temp == 3)
+                        {
+                            topLeft.clearAnimation();
+                            topRight.clearAnimation();
+                            bottomLeft.clearAnimation();
+                            bottomRight.startAnimation(blink);
+
+                            topLeft.setBackgroundColor(Color.RED);
+                            topRight.setBackgroundColor(Color.GREEN);
+                            bottomLeft.setBackgroundColor(Color.BLUE);
+                            bottomRight.setBackgroundColor(Color.GRAY);
+                            topLeft.setTextColor(Color.WHITE);
+                            topRight.setTextColor(Color.WHITE);
+                            bottomLeft.setTextColor(Color.WHITE);
+                            bottomRight.setTextColor(Color.GREEN);
+                        }
+                    }
+                    @Override
+                    public void onFinish()
+                    {
+                        topLeft.setBackgroundColor(Color.RED);
+                        topRight.setBackgroundColor(Color.GREEN);
+                        bottomLeft.setBackgroundColor(Color.BLUE);
+                        bottomRight.setBackgroundColor(Color.YELLOW);
+                        topLeft.setTextColor(Color.WHITE);
+                        topRight.setTextColor(Color.WHITE);
+                        bottomLeft.setTextColor(Color.WHITE);
+                        bottomRight.setTextColor(Color.WHITE);
+                        topLeft.clearAnimation();
+                        topRight.clearAnimation();
+                        bottomLeft.clearAnimation();
+                        bottomRight.clearAnimation();
+                    }
+                }.start();
+            }
+        });
+
         topLeft.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                topLeft.setBackgroundColor(Color.BLACK);
                 new CountDownTimer(10000, 1000)
                 {
                     public void onTick(long mill)
@@ -74,16 +180,20 @@ public class MainActivity extends AppCompatActivity
                         if(swap == false)
                         {
                             topLeft.setBackgroundColor(Color.BLUE);
+                            topRight.setBackgroundColor(Color.BLUE);
+                            bottomLeft.setBackgroundColor(Color.BLUE);
+                            bottomRight.setBackgroundColor(Color.BLUE);
                             Random ran = new Random();
                             int randNum = ran.nextInt(100);
                             topLeft.setText(randNum + "");
                             swap = true;
-                            score = intArray[counter];
-                            counter++;
                         }
                         else
                         {
                             topLeft.setBackgroundColor(Color.BLACK);
+                            topRight.setBackgroundColor(Color.BLACK);
+                            bottomLeft.setBackgroundColor(Color.BLACK);
+                            bottomRight.setBackgroundColor(Color.BLACK);
                             Random ran = new Random();
                             int randNum = ran.nextInt(100);
                             topLeft.setText(randNum + "");
@@ -94,7 +204,10 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onFinish()
                     {
-                        topLeft.setBackgroundColor(Color.GREEN);
+                        topLeft.setBackgroundColor(Color.RED);
+                        topRight.setBackgroundColor(Color.GREEN);
+                        bottomLeft.setBackgroundColor(Color.BLUE);
+                        bottomRight.setBackgroundColor(Color.YELLOW);
                     }
                 }.start();
             }
@@ -103,20 +216,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -124,3 +234,17 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 }
+/* Experimental/throwaway code section:
+
+//Randomizes colors
+Random red = new Random();
+Random green = new Random();
+Random blue = new Random();
+int redNum = red.nextInt(255);
+int greenNum = green.nextInt(255);
+int blueNum = blue.nextInt(255);
+StringBuilder randomColor = new StringBuilder();
+randomColor.append(redNum + "");
+randomColor.append(greenNum + "");
+randomColor.append(blueNum + "");
+*/
