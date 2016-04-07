@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         blink.setDuration(1000);
         blink.setInterpolator(new LinearInterpolator());
         //blink.setRepeatCount(Animation.ABSOLUTE); //or INFINITE
-        ///blink.setRepeatMode(Animation.REVERSE);
+        //blink.setRepeatMode(Animation.REVERSE);
         start.startAnimation(blink);
 
         start.setOnClickListener(new View.OnClickListener()
@@ -67,19 +67,43 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 start.clearAnimation();
+                String as = ": ";
                 for(int i = 0; i < 60; i++)
                 {
+
                     Random random = new Random();
                     int temp = random.nextInt(4);
                     sequence.add(temp);
-                    //start.setText(temp + "");
+
+                    StringBuilder stringAdd = new StringBuilder();
+                    as = temp + " ";
+                    stringAdd.append(as);
+
+
+
+                    /*
+                    sequence.add(0);
+                    sequence.add(1);
+                    sequence.add(2);
+                    sequence.add(3);
+                    sequence.add(0);
+                    sequence.add(1);
+                    sequence.add(2);
+                    sequence.add(3);
+                    sequence.add(0);
+                    sequence.add(1);
+                    sequence.add(2);
+                    sequence.add(3);
+                    sequence.add(0);
+                    */
                 }
+                score.setText(as.toString());
                 new CountDownTimer(10000, 1000)
                 {
                     int counter = 0;
                     public void onTick(long mill)
                     {
-                        int temp = 0;
+                        int temp;
                         temp = sequence.get(counter);
                         start.setText(temp + ""); //Driver code
                         counter++;
@@ -146,6 +170,10 @@ public class MainActivity extends AppCompatActivity
                             topRight.setTextColor(Color.WHITE);
                             bottomLeft.setTextColor(Color.WHITE);
                             bottomRight.setTextColor(Color.GREEN);
+                        }
+                        else
+                        {
+                            start.setBackgroundColor(Color.BLACK);
                         }
                     }
                     @Override
