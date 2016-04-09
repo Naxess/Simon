@@ -58,7 +58,8 @@
         android:layout_y="464dp"
         android:layout_gravity="center_vertical"
         android:layout_alignTop="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView" />
 
     <Button
         android:id="@+id/topright_button"
